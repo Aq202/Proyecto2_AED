@@ -1,0 +1,98 @@
+#navBar {
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    z-index: 999;
+    background-color: transparent;
+    width: 100%;
+    height: var(--navBar-height);
+    transition: all .5s ease;
+    color: white;
+    padding-right: 25px;
+}
+
+#navBar.backgroundStyle {
+    background-color: #1E69E4;
+    color: rgb(255, 255, 255);
+    box-shadow: 1px 0px 3px 2.5px rgba(0, 0, 0, 0.19);
+}
+
+#navBar>ul {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    list-style: none;
+    gap: 25px;
+    margin: 0;
+    padding: 0;
+
+}
+
+#navBar>ul li {
+    text-align: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+#navBar a, #navBar li {
+    font-family: var(--text-font);
+    font-weight: bold;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+#navBar a.active {
+    color: #ffc600;
+}
+
+#navBar>ul li {
+    transition: all .3s ease;
+    display: flex;
+    align-items: center;
+}
+
+#navBar>ul li:hover {
+    transform: translateY(-3px);
+}
+
+#navBar>ul.simpleMenu {
+    display: none;
+    justify-content: center;
+}
+
+#navBar .icon {
+    font-size: 30px;
+    color: white;
+    user-select: none;
+}
+
+@media only screen and (max-width:500px) {
+    #navBar>ul.menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.99);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        z-index: 4;
+    }
+
+    #navBar:not(.showMenu) > ul.menu{
+        display: none;
+    }
+
+    #navBar>ul.simpleMenu {
+        display: flex;
+        z-index: 5;
+        position: absolute;
+    }
+}
