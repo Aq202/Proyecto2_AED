@@ -1,0 +1,6 @@
+.App {
+  background: var(--background-color);
+  width: 100%;
+  grid-template-rows: var(--navBar-height) auto;
+  padding-bottom: 15vh;
+}
