@@ -12,7 +12,7 @@ const MoviesPage = () => {
 
 	return (
 		<div id="moviesPage">
-			<Banner bannerImage={profileBanner} title="Nueva Película" />
+			<Banner bannerImage={profileBanner} title="Mostrar Películas" />
 
 			<SendRecommendationsButton />
 

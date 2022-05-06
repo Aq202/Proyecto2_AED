@@ -39,8 +39,8 @@ const NavBar = () => {
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to="/newMovie" onClick={handlePageChange}>
-						Nueva Película
+					<NavLink to="/showMovies" onClick={handlePageChange}>
+						Mostrar Películas
 					</NavLink>
 				</li>
 				<li>
