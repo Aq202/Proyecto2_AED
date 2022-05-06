@@ -1,0 +1,154 @@
+.banner {
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+    font-size: 1.3vw;
+}
+
+.banner-container{
+    height: 70vh;
+    min-height: 350px;
+    width: 100%;
+    background: rgb(3, 222, 172);
+    background: radial-gradient(circle, rgba(3, 222, 172, 1) 0%, rgba(18, 88, 202, 1) 100%);
+    position: relative;
+    box-sizing: border-box;
+    border-bottom: -10px var(--background-color) solid;
+    padding-top: 10vh;
+}
+
+.banner img.wave {
+    bottom: -5px;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+}
+
+.banner .content {
+
+    padding-top: var(--navBar-height);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 35px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.banner img.bannerImage {
+    max-height: 50vh;
+    margin-bottom: -10%;
+    z-index: 3;
+}
+
+.banner h1 {
+    margin: 0;
+    font-family: var(--title-font);
+    font-size: 3.5em;
+    max-width: 95%;
+    text-align: center;
+    color: white;
+}
+
+@media only screen and (min-height:750px){
+    .banner{
+        min-height: 85vh;
+    }
+}
+
+@media only screen and (min-height:750px) and (min-width:1200px){
+    .banner{
+        margin-bottom: 180px;
+    }
+}
+
+@media only screen and (max-height:500px){
+    .banner{
+        margin-bottom: 60px;    
+    }
+}
+
+
+
+@media only screen and (max-width:1200px) {
+    .banner {
+        font-size: 1.5vw;
+
+    }
+}
+
+@media only screen and (max-width:1000px) {
+    .banner {
+        font-size: 1.8vw;
+        /* margin-bottom: 180px; */
+    }
+}
+
+@media only screen and (max-width:800px) {
+    .banner {
+        font-size: 2.2vw;
+
+    }
+}
+
+@media only screen and (max-width:700px) {
+    .banner {
+        font-size: 2.6vw;
+
+    }
+}
+
+@media only screen and (max-width:600px) {
+    .banner {
+        font-size: 3vw;
+
+    }
+
+    .banner img.bannerImage {
+        margin-top: 5%;
+        margin-bottom: -15%;
+    }
+}
+
+@media only screen and (max-width:530px) {
+    .banner img.bannerImage {
+        max-width: 90%;
+    }
+
+}
+
+@media only screen and (max-width:500px) {
+    .banner {
+        font-size: 3.4vw;
+
+    }
+}
+
+@media only screen and (max-width:450px) {
+    .banner {
+        font-size: 3.7vw;
+
+    }
+}
+
+@media only screen and (max-width:400px) {
+    .banner {
+        font-size: 4.1vw;
+
+    }
+}
+
+@media only screen and (max-width:350px) {
+    .banner {
+        font-size: 4.7vw;
+
+    }
+}
+
+@media only screen and (max-width:300px) {
+    .banner {
+        font-size: 5.2vw;
+
+    }
+}
