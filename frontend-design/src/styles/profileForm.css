@@ -1,0 +1,109 @@
+.profileForm {
+    --form-backgroud: var(--background-color);
+    width: 70%;
+    background-color: var(--form-backgroud);
+    border-radius: 20px;
+    padding: 25px;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    gap: 25px;
+    box-sizing: border-box;
+    margin: auto;
+    font-size: 17px;
+
+}
+
+.profileForm .inputContainer {
+    position: relative;
+    box-sizing: border-box;
+
+}
+
+.profileForm .inputContainer.inputBox input,
+.profileForm .inputContainer.inputBox select {
+    width: 100%;
+    padding: 15px 10px 13px 10px;
+    border: 1.5px #969696 solid;
+    color: var(--gray-text-color);
+    border-radius: 5px;
+    font-size: inherit;
+    position: relative;
+    outline: none;
+    background-color: var(--form-backgroud);
+    font-family: var(--text-font);
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+.profileForm .inputContainer input[type="number"]{
+    max-width: 150px;
+}
+
+.profileForm .inputContainer > label {
+    color: #2c2c2c;
+    font-weight: bold;
+    position: absolute;
+    top: -13px;
+    left: 10px;
+    background-color: var(--form-backgroud);
+    padding: 0 3px 0 3px;
+    z-index: 1;
+}
+
+.profileForm .radio-container{
+    padding: 15px 10px;
+}
+
+.profileForm .buttonContainer{
+    grid-column: span 2;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+}
+
+.profileForm .buttonContainer button{
+    font-size: 20px;
+    width: 40%;
+    max-width: 400px;
+    min-width: 100px;
+}
+
+@media only screen and (max-width:900px){
+    .profileForm {   
+        width: 85%;
+    }
+}
+
+@media only screen and (max-width:700px){
+    .profileForm {   
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width:550px){
+    .profileForm {   
+        grid-template-columns: 1fr;
+        
+    }   
+
+    .profileForm .nameContainer{
+        grid-row: 1;
+    }
+    .profileForm .nationalityContainer{
+        grid-row: 2;
+    }
+    .profileForm .languageContainer{
+        grid-row: 3;
+    }
+    .profileForm .ageContainer{
+        grid-row: 4;
+    }
+    .profileForm .sexContainer{
+        grid-row: 5;
+    }
+
+    
+
+
+}
