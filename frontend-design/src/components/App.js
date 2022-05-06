@@ -1,4 +1,3 @@
-import logo from "../resources/images/logo.svg";
 import "../styles/App.css";
 import reactDOM from "react-dom";
 import { usePopUp } from "./hooks/usePopUp";
