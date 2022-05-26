@@ -21,13 +21,13 @@ function App() {
 
 	return (
 		<div className="App">
-			<Router>
+			<Router basename={"Proyecto2_integrado"}>
 				<NavBar />
 				<Routes>
 					<Route path="/" element={<ProfilePage />} />
 					<Route path="/profile" element={<ProfilePage />} />
 					<Route path="/showMovies" element={<MoviesPage />} />
-					<Route path="/recomendations" element={<RecomendationPage/>	} />
+					<Route path="/recomendations" element={<RecomendationPage />} />
 				</Routes>
 			</Router>
 			{isWelcomeOpen
