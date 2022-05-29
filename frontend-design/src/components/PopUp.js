@@ -16,6 +16,7 @@ function PopUp({
 
 	const closeAnimation = () => {
 		fadeOut(refPopUp.current, 300, () => {
+			if (callback) callback();
 			close();
 		});
 	};

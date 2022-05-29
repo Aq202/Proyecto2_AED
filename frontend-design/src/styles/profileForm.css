@@ -9,7 +9,7 @@
 
 }
 
-.profileForm form{
+.profileForm form {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 25px;
@@ -94,6 +94,11 @@
     grid-column: span 2;
     margin: 0;
     text-align: justify;
+}
+
+.profileForm .spinner {
+    color: #1E69E4;
+    margin-top: 20px;
 }
 
 
