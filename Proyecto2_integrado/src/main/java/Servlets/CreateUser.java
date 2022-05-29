@@ -39,6 +39,8 @@ public class CreateUser extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");
@@ -94,10 +96,8 @@ public class CreateUser extends HttpServlet {
 			}
 
 		} catch (BadRequestException ex) {
-			JSONObject errorResponse = new JSONObject();
-			errorResponse.put("error", ex.getMessage());
-			out.println(errorResponse);
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+
 		}
 	}
 

@@ -3,5 +3,6 @@
     --text-font: "open sans";
     --blue-color: #1258ca;
     --background-color: #fafafa;
-    --navBar-height:50px;   
+    --navBar-height: 50px;
+    --error-color: rgb(243, 12, 12);
 }

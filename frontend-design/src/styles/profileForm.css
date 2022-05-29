@@ -2,15 +2,20 @@
     --form-backgroud: var(--background-color);
     width: 70%;
     background-color: var(--form-backgroud);
-    border-radius: 20px;
     padding: 25px;
-    display: grid;
-    grid-template-columns: 1fr max-content;
-    gap: 25px;
-    box-sizing: border-box;
     margin: auto;
     font-size: 17px;
+    box-sizing: border-box;
 
+}
+
+.profileForm form{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    box-sizing: border-box;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .profileForm .inputContainer {
@@ -35,11 +40,11 @@
     box-sizing: border-box;
 }
 
-.profileForm .inputContainer input[type="number"]{
+.profileForm .inputContainer input[type="number"] {
     max-width: 150px;
 }
 
-.profileForm .inputContainer > label {
+.profileForm .inputContainer>label {
     color: #2c2c2c;
     font-weight: bold;
     position: absolute;
@@ -50,60 +55,99 @@
     z-index: 1;
 }
 
-.profileForm .radio-container{
+.profileForm .sexContainer {
     padding: 15px 10px;
 }
 
-.profileForm .buttonContainer{
+.profileForm .radio-container {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, max-content);
+    column-gap: 10px;
+}
+
+.profileForm .buttonContainer {
     grid-column: span 2;
     text-transform: uppercase;
     display: flex;
     justify-content: center;
-    padding: 15px 0;
 }
 
-.profileForm .buttonContainer button{
+.profileForm .buttonContainer button {
     font-size: 20px;
     width: 40%;
     max-width: 400px;
     min-width: 100px;
 }
 
-@media only screen and (max-width:900px){
-    .profileForm {   
+.profileForm .title {
+    white-space: nowrap;
+    max-width: calc(100% - 20px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profileForm .error-message {
+    font-size: 15px;
+    color: var(--error-color);
+    font-weight: bold;
+    grid-column: span 2;
+    margin: 0;
+    text-align: justify;
+}
+
+
+@media only screen and (max-width:1020px) {
+    .profileForm .radio-container {
+        grid-template-columns: repeat(1, max-content);
+    }
+}
+
+@media only screen and (max-width:900px) {
+    .profileForm {
         width: 85%;
     }
 }
 
-@media only screen and (max-width:700px){
-    .profileForm {   
+@media only screen and (max-width:750px) {
+    .profileForm {
         width: 100%;
     }
 }
 
-@media only screen and (max-width:550px){
-    .profileForm {   
+@media only screen and (max-width:600px) {
+    .profileForm form {
         grid-template-columns: 1fr;
-        
-    }   
+    }
 
-    .profileForm .nameContainer{
+    .profileForm .nameContainer {
         grid-row: 1;
     }
-    .profileForm .nationalityContainer{
+
+    .profileForm .nationalityContainer {
         grid-row: 2;
     }
-    .profileForm .languageContainer{
+
+    .profileForm .languageContainer {
         grid-row: 3;
     }
-    .profileForm .ageContainer{
+
+    .profileForm .birthdayContainer {
         grid-row: 4;
     }
-    .profileForm .sexContainer{
+
+    .profileForm .sexContainer {
         grid-row: 5;
     }
 
-    
+    .profileForm .radio-container {
+        grid-template-columns: repeat(2, max-content);
+    }
 
+}
 
+@media only screen and (max-width:400px) {
+    .profileForm .radio-container {
+        grid-template-columns: repeat(1, max-content);
+    }
 }
