@@ -2,6 +2,8 @@ package Servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.UUID;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -45,31 +47,45 @@ public class CreateUser extends HttpServlet {
 
 		try {
 
-			JSONArray insertionResult = new JSONArray();
-
 			String name = request.getParameter("name");
-			String age_param = request.getParameter("age");
+			String birthYear_param = request.getParameter("birthYear");
+			String sex = request.getParameter("sex");
+			String nationality = request.getParameter("nationality");
+			String language = request.getParameter("language");
 
-			if (name == null || age_param == null)
-				throw new BadRequestException("Las propiedades name y age son requeridas.");
+			if (name == null)
+				throw new BadRequestException("La propiedad 'name' es requerida.");
+			if (birthYear_param == null)
+				throw new BadRequestException("La propiedad 'birthYear' es requerida.");
+			if (sex == null)
+				throw new BadRequestException("La propiedad 'sex' es requerida.");
+			if( !"M".equalsIgnoreCase(sex.trim()) && !"F".equalsIgnoreCase(sex.trim()))
+				throw new BadRequestException("La propiedad 'sex' es invalida. Valor 'M' o 'F' requerido.");
+			if (nationality == null)
+				throw new BadRequestException("La propiedad 'nationality' es requerida.");
+			if (language == null)
+				throw new BadRequestException("La propiedad 'language' es requerida.");
 
 			try {
+				
+				//Validar año de nacimiento como entero
+				int birthYear = Integer.parseInt(birthYear_param);
+				
+				//generar id unico
+				String userId = UUID.randomUUID().toString();
 
-				int age = Integer.parseInt(age_param);
-
-				System.out.println("Name: " + name + " Age: " + age);
-
+				
 				try (User user = new User()) {
-					String myResultTx = user.createUser(name, age);
-					myResponse.put("resultado", myResultTx);
+					String result = user.createUser(userId, name.trim(), sex.toUpperCase().trim(), nationality.toUpperCase().trim(), language.toUpperCase().trim(), birthYear);
+					
+					myResponse.put("result", result);
+					myResponse.put("userId", userId); //enviar userId
 
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					myResponse.put("resultado", "Error: " + e.getMessage());
+
+					myResponse.put("error", "Error: " + e.getMessage());
 				}
 
-				myResponse.put("Parametros", "Name: " + name + " Age: " + age);
 				out.println(myResponse);
 				out.flush();
 
