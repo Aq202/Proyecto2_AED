@@ -59,7 +59,7 @@ public class Movie implements AutoCloseable {
 							+ "CREATE (m)-[:GENRE]->(g)",
 							title,duration,director,country,mainCharacter,releaseYear,language,genre));
 
-					return "OK";
+					return "Película registrada exitosamente";
 				}
 			}
 
