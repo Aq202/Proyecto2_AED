@@ -63,6 +63,46 @@ public class User implements AutoCloseable {
 		}
 
 	}
+	
+	public String updateUser(String id, String userName, String sex, String nationality, String language, int birthYear) throws Exception{
+
+		try (Session session = connection.startSession()) {
+
+
+			String result = session.writeTransaction(new TransactionWork<String>()
+
+			{
+				@Override
+				public String execute(Transaction tx) {
+					tx.run(String.format(
+							"MATCH (u:user {id:'%s'})"
+							+ "SET u.name = '%s'"
+							+ "WITH u MATCH (u)-[s_r:SEX]->() DELETE s_r "
+							+ "WITH u MATCH (u)-[n_r:NATIONALITY]->() DELETE n_r "
+							+ "WITH u MATCH (u)-[b_r:BIRTH_YEAR]->() DELETE b_r "
+							+ "WITH u MATCH (u)-[l_r:LANGUAGE]->() DELETE l_r "
+							+ "MERGE (s:sex {val:'%s'}) "
+							+ "MERGE (n:nationality {val:'%s'}) "
+							+ "MERGE (l:language {val:'%s'}) "
+							+ "MERGE (b:birth_year {val:'%s'}) "
+							+ "CREATE (u)-[:SEX]->(s) "
+							+ "CREATE (u)-[:NATIONALITY]->(n) "
+							+ "CREATE (u)-[:LANGUAGE]->(l) "
+							+ "CREATE (u)-[:BIRTH_YEAR]->(b) ",
+							id,userName,sex, nationality, language,birthYear));
+
+					return "OK";
+				}
+			}
+
+			);
+
+			return result;
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+
+	}
 
 	public LinkedList<String> getUsersList() {
 

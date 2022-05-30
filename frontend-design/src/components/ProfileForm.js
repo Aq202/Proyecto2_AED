@@ -46,6 +46,14 @@ const ProfileForm = () => {
 		}));
 	}, [languages]);
 
+	//verificar si es una actualización de datos
+	useEffect(() => {
+		const data = sessionStorage.getItem("userData");
+		try {
+			if (data !== null) setForm(JSON.parse(data));
+		} catch (ex) {}
+	}, []);
+
 	const handleChange = e => {
 		if (e.target.name === undefined || e.target.name === null) return;
 		setForm(lastForm => ({
@@ -110,8 +118,8 @@ const ProfileForm = () => {
 
 		//realizar consulta
 		let response;
-		let url = "./createUser?" + new URLSearchParams(data).toString();
-		openSuccess(); //Success notification
+		let url =
+			(form.id ? "./updateUser" : "./createUser") + "?" + new URLSearchParams(data).toString();
 
 		fetch(url, {
 			headers: {
@@ -127,10 +135,15 @@ const ProfileForm = () => {
 
 				if (response.ok === true) {
 					//store user information
-					sessionStorage.setItem("userData", {
-						id: result?.userId,
-						name: data.name,
-					});
+					sessionStorage.setItem(
+						"userData",
+						JSON.stringify({
+							...form,
+							id: result?.userId,
+						})
+					);
+
+					openSuccess(); //Success notification
 				} else throw null;
 			})
 			.catch(err => {
@@ -180,10 +193,9 @@ const ProfileForm = () => {
 						className="nationality"
 						id="nationality-input"
 						name="nationality"
-						onChange={handleChange}
-						defaultValue={form.nationality}>
+						onChange={handleChange}>
 						{countries.map(elem => (
-							<option value={elem.code} key={elem.code}>
+							<option value={elem.code} key={elem.code} selected={form.nationality == elem.code}>
 								{elem.name_es}
 							</option>
 						))}
@@ -200,7 +212,7 @@ const ProfileForm = () => {
 								id="masculine_radio"
 								name="sex"
 								onChange={handleChange}
-								defaultChecked={form.sex === "M"}
+								checked={form.sex === "M"}
 							/>
 							<label htmlFor="masculine_radio">Masculino</label>
 						</div>
@@ -212,7 +224,7 @@ const ProfileForm = () => {
 								id="femenine_radio"
 								name="sex"
 								onChange={handleChange}
-								defaultChecked={form.sex === "F"}
+								checked={form.sex === "F"}
 							/>
 							<label htmlFor="femenine_radio">Femenino</label>
 						</div>
@@ -224,7 +236,7 @@ const ProfileForm = () => {
 								id="other_radio"
 								name="sex"
 								onChange={handleChange}
-								defaultChecked={form.sex === "X"}
+								checked={form.sex === "X"}
 							/>
 							<label htmlFor="other_radio">Otro</label>
 						</div>
@@ -235,13 +247,9 @@ const ProfileForm = () => {
 					<label className="title" htmlFor="language-input">
 						Idioma materno:
 					</label>
-					<select
-						id="language-input"
-						name="language"
-						onChange={handleChange}
-						defaultValue={form.language}>
+					<select id="language-input" name="language" onChange={handleChange}>
 						{languages.map(elem => (
-							<option value={elem.code} key={elem.code}>
+							<option value={elem.code} key={elem.code} selected={form.language === elem.code}>
 								{elem.name}
 							</option>
 						))}
@@ -251,7 +259,7 @@ const ProfileForm = () => {
 				<div className="buttonContainer">
 					{showButton ? (
 						<button className="blue-button" onClick={handleSubmit}>
-							Enviar
+							{form.id ? "Actualizar" : "Enviar"}
 						</button>
 					) : null}
 

@@ -2,11 +2,9 @@ import React from "react";
 import "../styles/profilePage.css";
 import Banner from "./Banner.js";
 import profileBanner from "../resources/images/profileBanner.svg";
-import countries from "../resources/files/countries.json";
 import ProfileForm from "./ProfileForm";
 
 const ProfilePage = () => {
-	console.log(countries);
 	return (
 		<div id="profilePage">
 			<Banner bannerImage={profileBanner} title="Perfil de Usuario" />
