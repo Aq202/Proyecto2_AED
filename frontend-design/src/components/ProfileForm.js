@@ -9,6 +9,8 @@ import errorImage from "../resources/icons/failure.svg";
 import successImage from "../resources/icons/success.svg";
 import ReactDOM from "react-dom";
 import Spinner from "./Spinner";
+import { useNavigate } from "react-router-dom";
+import InstructionsPopUp from "./InstructionsPopUp";
 
 const ProfileForm = () => {
 	const [form, setForm] = useState({});
@@ -19,12 +21,14 @@ const ProfileForm = () => {
 		{ name: "Francés", code: "fr" },
 	]);
 	const [error, setError] = useState(null);
-	const [fatalError, setFatalError] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [showButton, setShowButton] = useState(true);
 
 	const [isSuccessOpen, openSuccess, closeSuccess] = usePopUp();
 	const [isErrorOpen, openError, closeError] = usePopUp();
+	const [isNextStepOpen, openNextStep, closeNextStep] = usePopUp();
+
+	const navigate = useNavigate();
 
 	//Seleccionar país por defecto
 	useEffect(() => {
@@ -51,7 +55,13 @@ const ProfileForm = () => {
 	};
 
 	const succesfulRegistrationCallback = () => {
-		alert("Abriendo siguiente ");
+		setTimeout(() => {
+			openNextStep(); //abrir instrucciones del siguiente paso
+		}, 500);
+	};
+
+	const redirectToNextStep = () => {
+		navigate("/showMovies"); //redireccionar a la siguiente etapa
 	};
 
 	const handleSubmit = async e => {
@@ -101,6 +111,7 @@ const ProfileForm = () => {
 		//realizar consulta
 		let response;
 		let url = "./createUser?" + new URLSearchParams(data).toString();
+		openSuccess(); //Success notification
 
 		fetch(url, {
 			headers: {
@@ -120,8 +131,6 @@ const ProfileForm = () => {
 						id: result?.userId,
 						name: data.name,
 					});
-
-					openSuccess(); //Success notification
 				} else throw null;
 			})
 			.catch(err => {
@@ -272,6 +281,23 @@ const ProfileForm = () => {
 							image={errorImage}
 							title={"Ocurrió un error"}
 							text={"Ocurrió un error en el servidor."}
+						/>,
+						document.querySelector("body")
+				  )
+				: null}
+
+			{isNextStepOpen
+				? ReactDOM.createPortal(
+						<InstructionsPopUp
+							close={closeNextStep}
+							instructions={[
+								"¡Muy bien!",
+								"Ahora cuentanos un poco sobre tus gustos en películas.",
+								"Marca con 👍👎 según te haya parecido cada filme.",
+								"Cuando hayas terminado con la mayor cantidad de películas, presiona el botón 'Enviar'.",
+								"¡Vamos a ello!",
+							]}
+							callback={redirectToNextStep}
 						/>,
 						document.querySelector("body")
 				  )

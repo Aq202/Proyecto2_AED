@@ -5,8 +5,9 @@ import welcomeGuy from "../resources/images/welcomeGuy.svg";
 import "../styles/variables.css";
 import TypeAnimation from "react-type-animation";
 import gsap from "gsap";
+import PropTypes from "prop-types";
 
-const WelcomePopUp = ({ close }) => {
+const InstructionsPopUp = ({ close, instructions, callback }) => {
 	const [welcomeMessages, setWelcomeMessages] = useState([]); //almacena los textos de bienvenida
 	const imageRef = useRef();
 
@@ -19,26 +20,21 @@ const WelcomePopUp = ({ close }) => {
 			{ opacity: 1, y: 0, ease: "elastic.out(1, 0.3)", duration: 3 }
 		);
 
-		tl.call(
-			() =>
-				setWelcomeMessages([
-					"¡Hola, que gusto de verte!",
-					1000,
-					"Agradecemos tu participación.",
-					1000,
-					"Te invitamos a probar las funcionalidades de nuestro proyecto. ¡Adelante!",
-					1000,
-				]),
-			null,
-			1
-		);
+		//crear arreglo de instrucciones (con delay)
+		let instructionsArray = [];
+		instructions.forEach(element => {
+			instructionsArray.push(element);
+			instructionsArray.push(1000);
+		});
+
+		tl.call(() => setWelcomeMessages(instructionsArray), null, 1);
 		tl.call(() => imageRef.current.classList.add("animation"));
 
 		tl.restart();
 	}, [imageRef]);
 
 	return (
-		<PopUp close={close} closeWithBackground={false} maxWidth={500}>
+		<PopUp close={close} closeWithBackground={false} maxWidth={500} callback={callback}>
 			<div id="welcomePopUp">
 				<img src={welcomeGuy} alt="Welcome" className="welcomeGuy" ref={imageRef} />
 				<TypeAnimation sequence={welcomeMessages} className="text" />
@@ -47,4 +43,10 @@ const WelcomePopUp = ({ close }) => {
 	);
 };
 
-export default WelcomePopUp;
+InstructionsPopUp.propTypes = {
+	close: PropTypes.func.isRequired,
+	instructions: PropTypes.isRequired,
+	callback: PropTypes.func,
+};
+
+export default InstructionsPopUp;

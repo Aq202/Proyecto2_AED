@@ -1,7 +1,7 @@
 import "../styles/App.css";
 import reactDOM from "react-dom";
 import { usePopUp } from "./hooks/usePopUp";
-import WelcomePopUp from "./WelcomePopUp";
+import InstructionsPopUp from "./InstructionsPopUp";
 import { useEffect } from "react";
 import NavBar from "./NavBar";
 import ProfilePage from "./ProfilePage";
@@ -32,7 +32,14 @@ function App() {
 			</Router>
 			{isWelcomeOpen
 				? reactDOM.createPortal(
-						<WelcomePopUp close={closeWelcome} />,
+						<InstructionsPopUp
+							close={closeWelcome}
+							instructions={[
+								"¡Hola, que gusto de verte!",
+								"Agradecemos tu participación.",
+								"Te invitamos a probar las funcionalidades de nuestro proyecto. ¡Adelante!",
+							]}
+						/>,
 						document.querySelector("body")
 				  )
 				: null}
