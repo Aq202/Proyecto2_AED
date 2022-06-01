@@ -48,6 +48,7 @@ public class CreateMovie extends HttpServlet {
 		try {
 
 			String title = request.getParameter("title");
+			String imgUrl = request.getParameter("imageUrl");
 			String duration_param = request.getParameter("duration");
 			String director = request.getParameter("director");
 			String country = request.getParameter("country");
@@ -72,6 +73,9 @@ public class CreateMovie extends HttpServlet {
 				throw new BadRequestException("La propiedad 'language' es requerida.");
 			if (genre == null)
 				throw new BadRequestException("La propiedad 'genre' es requerida.");
+			
+			if(imgUrl == null) imgUrl = "";
+			
 			try {
 				
 				//Validar que la duracion como entero
@@ -97,7 +101,7 @@ public class CreateMovie extends HttpServlet {
 					int releaseYear = Integer.parseInt(releaseYear_param);
 					
 					try (Movie movie = new Movie()) {
-						String result = movie.createMovie(title.trim(), s_duration, director.trim(), country.trim(), mainCharacter.trim(), releaseYear, language.trim(), genre.trim());
+						String result = movie.createMovie(title.trim(), s_duration, director.trim(), country.trim(), mainCharacter.trim(), releaseYear, language.trim(), genre.trim(), imgUrl);
 						
 						myResponse.put("result", result);
 	

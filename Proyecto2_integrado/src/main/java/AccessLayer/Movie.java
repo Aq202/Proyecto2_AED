@@ -32,18 +32,21 @@ public class Movie implements AutoCloseable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String createMovie(String title, String duration, String director, String country, String mainCharacter, int releaseYear, String language, String genre) throws Exception{
+	public String createMovie(String title, String duration, String director, String country, String mainCharacter, int releaseYear, String language, String genre, String imgUrl) throws Exception{
 
 		try (Session session = connection.startSession()) {
-
+			
+			
 
 			String result = session.writeTransaction(new TransactionWork<String>()
 
 			{
 				@Override
 				public String execute(Transaction tx) {
+					
+					
 					tx.run(String.format(
-							"CREATE (m:movie {title:'%s'})"
+							"CREATE (m:movie {title:'%s', image:'%s'})"
 							+ "MERGE (dn:duration {val:'%s'})"
 							+ "MERGE (d:director {val:'%s'})"
 							+ "MERGE (c:country {val:'%s'})"
@@ -58,7 +61,7 @@ public class Movie implements AutoCloseable {
 							+ "CREATE (m)-[:RELEASE_YEAR]->(y)"
 							+ "CREATE (m)-[:LANGUAGE]->(l)"
 							+ "CREATE (m)-[:GENRE]->(g)",
-							title,duration,director,country.toUpperCase(),mainCharacter,releaseYear,language.toUpperCase(),genre.toUpperCase()));
+							title,imgUrl,duration,director,country.toUpperCase(),mainCharacter,releaseYear,language.toUpperCase(),genre.toUpperCase()));
 
 					return "Película registrada exitosamente";
 				}

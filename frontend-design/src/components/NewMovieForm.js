@@ -58,9 +58,18 @@ const NewMovieForm = () => {
 		setError(null);
 
 		//validaciones
-
-		const { title, duration, director, country, mainCharacter, releaseYear, language, genre } =
-			form;
+		const data = { ...form };
+		const {
+			title,
+			duration,
+			director,
+			country,
+			mainCharacter,
+			releaseYear,
+			language,
+			genre,
+			imageUrl,
+		} = data;
 
 		if (!(title?.trim().length > 0)) return setError("La casilla 'título' es obligatoria.");
 		if (!(director?.trim().length > 0)) return setError("La casilla 'director' es obligatoria.");
@@ -73,13 +82,16 @@ const NewMovieForm = () => {
 		if (isNaN(duration)) return setError("La casilla 'duración' es obligatoria.");
 		if (isNaN(releaseYear)) return setError("La casilla 'año' es obligatoria.");
 
+		//retirar parametro de imagen si no se ingresó
+		if (!(imageUrl?.trim().length > 0)) delete data.imageUrl;
+
 		//deshabilitar botón y mostrar spinner
 		setShowButton(false);
 		setIsLoading(true);
 
 		//realizar consulta
 		let response;
-		let url = "./createMovie?" + new URLSearchParams(form).toString();
+		let url = "./createMovie?" + new URLSearchParams(data).toString();
 
 		fetch(url)
 			.then(r => {
@@ -175,23 +187,6 @@ const NewMovieForm = () => {
 					</select>
 				</div>
 
-				<div className="inputContainer inputBox releaseYear-container shortInput">
-					<label className="title" htmlFor="releaseYear-input">
-						Año:
-					</label>
-					<select
-						id="releaseYear-input"
-						name="releaseYear"
-						onChange={handleChange}
-						value={form.releaseYear}>
-						{years?.map(year => (
-							<option value={year} key={uniqid()}>
-								{year}
-							</option>
-						))}
-					</select>
-				</div>
-
 				<div className="inputContainer inputBox language-container">
 					<label className="title" htmlFor="language-input">
 						Idioma:
@@ -205,21 +200,53 @@ const NewMovieForm = () => {
 					</select>
 				</div>
 
-				<div className="inputContainer inputBox duration-container shortInput">
-					<label className="title" htmlFor="duration-input">
-						Duración:
+				<div className="inputContainer inputBox image-container">
+					<label className="title" htmlFor="image-input">
+						Imagen:
 					</label>
 					<input
-						type="number"
-						placeholder="Minutos"
-						name="duration"
+						placeholder="http://example.com/image.jpg"
+						type="url"
+						name="imageUrl"
 						onChange={handleChange}
-						value={form.duration ?? ""}
-						id="duration-input"
-						min={1}
+						value={form.imageUrl ?? ""}
+						id="image-input"
 					/>
 				</div>
 
+				<div className="shortInput-container">
+					<div className="inputContainer inputBox releaseYear-container shortInput">
+						<label className="title" htmlFor="releaseYear-input">
+							Año:
+						</label>
+						<select
+							id="releaseYear-input"
+							name="releaseYear"
+							onChange={handleChange}
+							value={form.releaseYear}>
+							{years?.map(year => (
+								<option value={year} key={uniqid()}>
+									{year}
+								</option>
+							))}
+						</select>
+					</div>
+
+					<div className="inputContainer inputBox duration-container shortInput">
+						<label className="title" htmlFor="duration-input">
+							Duración:
+						</label>
+						<input
+							type="number"
+							placeholder="Minutos"
+							name="duration"
+							onChange={handleChange}
+							value={form.duration ?? ""}
+							id="duration-input"
+							min={1}
+						/>
+					</div>
+				</div>
 				<div className="buttonContainer">
 					{showButton ? (
 						<button className="blue-button" onClick={handleSubmit}>
@@ -239,7 +266,9 @@ const NewMovieForm = () => {
 							close={closeSuccess}
 							image={successImage}
 							title={"Operación realizada con éxito"}
-							text={"La película se ha registrado correctamente!"}
+							text={
+								"La película se ha registrado correctamente! Puedes ingresar cuantas películas desees."
+							}
 							callback={successCallBack}
 						/>,
 						document.querySelector("body")

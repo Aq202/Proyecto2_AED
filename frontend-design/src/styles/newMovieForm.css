@@ -41,7 +41,7 @@
     box-sizing: border-box;
 }
 
-.newMovieForm .shortInput{
+.newMovieForm .shortInput {
     max-width: 150px;
 }
 
@@ -92,6 +92,11 @@
     margin-top: 20px;
 }
 
+.newMovieForm .shortInput-container {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
 
 
 @media only screen and (max-width:900px) {
@@ -107,90 +112,31 @@
 }
 
 
-@media only screen and (max-width:600px) {
+@media only screen and (max-width:680px) {
 
-    .newMovieForm .title-container{
-        order: 1;
-        grid-column: span 2;
-    }
-    .newMovieForm .director-container{
-        order: 2;
-        grid-column: span 2;
-    }
-    .newMovieForm .mainCharacter-container{
-        order: 3;
-        grid-column: span 2;
-    }
-    .newMovieForm .genre-container{
-        order: 4;
-        grid-column: span 2;
-    }
-    .newMovieForm .country-container{
-        order: 5;
-        grid-column: span 2;
-    }
-    .newMovieForm .language-container{
-        order: 6;
-        grid-column: span 2;
-    }
-    .newMovieForm .releaseYear-container{
-        order: 7;
-    }
-    .newMovieForm .duration-container{
-        order: 8;
-    }
-    .newMovieForm .buttonContainer{
-        order: 9;
-    }
-
-    .newMovieForm .inputContainer {
-        margin: auto;
-    
-    }
-}
-
-
-@media only screen and (max-width:400px) {
     .newMovieForm form {
         grid-template-columns: 1fr;
     }
 
-    .newMovieForm .title-container{
-        order: 1;
-        grid-column: 1;
-    }
-    .newMovieForm .director-container{
-        order: 2;
-        grid-column: 1;
-    }
-    .newMovieForm .mainCharacter-container{
-        order: 3;
-        grid-column: 1;
-    }
-    .newMovieForm .genre-container{
-        order: 4;
-        grid-column: 1;
-    }
-    .newMovieForm .country-container{
-        order: 5;
-        grid-column: 1;
-    }
-    .newMovieForm .language-container{
-        order: 6;
-        grid-column: 1;
-    }
-    .newMovieForm .releaseYear-container{
-        order: 7;
-    }
-    .newMovieForm .duration-container{
-        order: 8;
-    }
-    .newMovieForm .buttonContainer{
-        order: 9;
+    .newMovieForm .buttonContainer {
+
         grid-column: 1;
     }
 
-    .newMovieForm .shortInput{
+    .newMovieForm .shortInput {
+        max-width: none;
+    }
+
+}
+
+
+@media only screen and (max-width:400px) {
+
+    .newMovieForm .shortInput-container {
+        flex-direction: column;
+    }
+
+    .newMovieForm .shortInput {
         max-width: none;
     }
 }
