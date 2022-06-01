@@ -2,11 +2,11 @@ package AccessLayer;
 
 import java.util.LinkedList;
 import java.util.List;
-
+import org.neo4j.driver.Session;
 import org.json.simple.JSONArray;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
-import org.neo4j.driver.Session;
+
 import org.neo4j.driver.Transaction;
 import org.neo4j.driver.TransactionWork;
 
@@ -70,6 +70,40 @@ public class Movie implements AutoCloseable {
 			throw new Exception(e.getMessage());
 		}
 
+	}
+	
+	/**
+	 * Método que permite obtener los nombres de directores que al menos contengan la cadena ingresada.
+	 * @param name. Nombre completo o fragmento del director.
+	 * @return
+	 */
+	public LinkedList<String> searchDirectorsByName(String name) {
+
+		try (Session session = connection.startSession()) {
+			return session.readTransaction(new TransactionWork<LinkedList<String>>() {
+				
+				@Override
+				public LinkedList<String> execute(Transaction tx) {
+					
+					Result result = tx.run(String.format("MATCH (m:movie) WHERE m.director CONTAINS '%s' RETURN m.director AS director", name));
+					LinkedList<String> directorsList = new LinkedList<String>();
+					List<Record> registers = result.list();
+					for (int i = 0; i < registers.size(); i++) {
+
+						var registersData = registers.get(i).values();
+						JSONArray directorsData = new JSONArray();
+
+						directorsData.add(registersData.get(0).asString());
+						directorsData.add(String.valueOf(registersData.get(1).asInt()));
+
+						directorsList.add(directorsData.toJSONString());
+					}
+
+					return directorsList;
+				}
+			});
+
+		}
 	}
 	
 	@Override

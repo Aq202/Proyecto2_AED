@@ -66,9 +66,9 @@ public class CreateMovie extends HttpServlet {
 			if (country == null)
 				throw new BadRequestException("La propiedad 'country' es requerida.");
 			if (mainCharacter == null)
-				throw new BadRequestException("La propiedad 'main character' es requerida.");
+				throw new BadRequestException("La propiedad 'mainCharacter' es requerida.");
 			if (releaseYear_param == null)
-				throw new BadRequestException("La propiedad 'release year' es requerida.");
+				throw new BadRequestException("La propiedad 'releaseYear' es requerida.");
 			if (language == null)
 				throw new BadRequestException("La propiedad 'language' es requerida.");
 			if (genre == null)
