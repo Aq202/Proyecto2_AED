@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TextBox from "./TextBox";
 
-const GenreTextBox = ({ defaultValue, name, onChange }) => {
+const GenreTextBox = ({ defaultValue, name, onChange, id, value }) => {
 	const [options, setOptions] = useState(null);
 	const [abort, setAbort] = useState(null);
 
@@ -39,11 +39,13 @@ const GenreTextBox = ({ defaultValue, name, onChange }) => {
 
 	return (
 		<TextBox
+			id={id}
 			defaultValue={defaultValue}
 			onChange={onChange}
 			name={name}
 			options={options}
 			searchOptions={searchOptions}
+			value={value}
 		/>
 	);
 };

@@ -4,7 +4,7 @@ import "../styles/variables.css";
 import PropTypes from "prop-types";
 import uniqid from "uniqid";
 
-const TextBox = ({ searchOptions, options, defaultValue, onChange, name }) => {
+const TextBox = ({ searchOptions, options, defaultValue, onChange, name, id, value }) => {
 	const optionsRef = useRef([]);
 	const optionsContainerRef = useRef();
 
@@ -12,6 +12,12 @@ const TextBox = ({ searchOptions, options, defaultValue, onChange, name }) => {
 	const [lastText, setLastText] = useState(defaultValue ?? "");
 	const [currentText, setCurrentText] = useState(defaultValue ?? "");
 	const [hideOptions, setHideOptions] = useState(true);
+
+	//cambio de valor externo
+	useEffect(() => {
+		setCurrentText(value);
+		confirmText();
+	}, [value]);
 
 	//majenar cambio de opcion
 	useEffect(() => {
@@ -48,8 +54,8 @@ const TextBox = ({ searchOptions, options, defaultValue, onChange, name }) => {
 		//search for options
 		else if (searchOptions) {
 			const value = e.target.value.trim();
-			confirmText();
 			searchOptions(value);
+			confirmText();
 		}
 	};
 
@@ -91,6 +97,7 @@ const TextBox = ({ searchOptions, options, defaultValue, onChange, name }) => {
 	return (
 		<div className="textBox">
 			<input
+				id={id}
 				type="text"
 				name={name}
 				onKeyUp={handleKeyUp}

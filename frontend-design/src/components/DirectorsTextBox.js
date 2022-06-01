@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import TextBox from "./TextBox";
 
-const DirectorsTextBox = ({ defaultValue, onChange, name }) => {
+const DirectorsTextBox = ({ value, defaultValue, onChange, name, id }) => {
 	const [options, setOptions] = useState(null);
 	const [abort, setAbort] = useState(null);
 
@@ -39,11 +39,13 @@ const DirectorsTextBox = ({ defaultValue, onChange, name }) => {
 
 	return (
 		<TextBox
+			id={id}
 			defaultValue={defaultValue}
 			onChange={onChange}
 			name={name}
 			options={options}
 			searchOptions={searchDirectorsOptions}
+			value={value}
 		/>
 	);
 };
