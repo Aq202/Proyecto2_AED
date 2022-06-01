@@ -51,7 +51,7 @@ public class User implements AutoCloseable {
 							+ "CREATE (u)-[:BIRTH_YEAR]->(b)",
 							id,userName,sex, nationality, language,birthYear));
 
-					return "OK";
+					return "Usuario registrado exitosamente";
 				}
 			}
 
