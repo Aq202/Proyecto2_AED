@@ -7,7 +7,7 @@ import NavBar from "./NavBar";
 import ProfilePage from "./ProfilePage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MoviesPage from "./NewMoviePage";
-import RecomendationPage from "./RecomendationPage";
+import RateMoviesPage from "./RateMoviesPage";
 
 function App() {
 	const [isWelcomeOpen, openWelcome, closeWelcome] = usePopUp();
@@ -27,7 +27,7 @@ function App() {
 					<Route path="/" element={<ProfilePage />} />
 					<Route path="/profile" element={<ProfilePage />} />
 					<Route path="/showMovies" element={<MoviesPage />} />
-					<Route path="/recomendations" element={<RecomendationPage />} />
+					<Route path="/rateMovies" element={<RateMoviesPage />} />
 				</Routes>
 			</Router>
 			{isWelcomeOpen

@@ -100,8 +100,11 @@ public class CreateMovie extends HttpServlet {
 					//Validar año de lanzamiento como entero
 					int releaseYear = Integer.parseInt(releaseYear_param);
 					
+					//generar id unico
+					String id = UUID.randomUUID().toString();
+					
 					try (Movie movie = new Movie()) {
-						String result = movie.createMovie(title.trim(), s_duration, director.trim(), country.trim(), mainCharacter.trim(), releaseYear, language.trim(), genre.trim(), imgUrl);
+						String result = movie.createMovie(id,title.trim(), s_duration, director.trim(), country.trim(), mainCharacter.trim(), releaseYear, language.trim(), genre.trim(), imgUrl);
 						
 						myResponse.put("result", result);
 	

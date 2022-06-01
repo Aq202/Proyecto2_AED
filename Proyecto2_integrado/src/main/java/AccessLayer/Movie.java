@@ -32,7 +32,7 @@ public class Movie implements AutoCloseable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String createMovie(String title, String duration, String director, String country, String mainCharacter, int releaseYear, String language, String genre, String imgUrl) throws Exception{
+	public String createMovie(String id, String title, String duration, String director, String country, String mainCharacter, int releaseYear, String language, String genre, String imgUrl) throws Exception{
 
 		try (Session session = connection.startSession()) {
 			
@@ -46,7 +46,7 @@ public class Movie implements AutoCloseable {
 					
 					
 					tx.run(String.format(
-							"CREATE (m:movie {title:'%s', image:'%s'})"
+							"CREATE (m:movie {id:'%s', title:'%s', image:'%s'})"
 							+ "MERGE (dn:duration {val:'%s'})"
 							+ "MERGE (d:director {val:'%s'})"
 							+ "MERGE (c:country {val:'%s'})"
@@ -61,7 +61,7 @@ public class Movie implements AutoCloseable {
 							+ "CREATE (m)-[:RELEASE_YEAR]->(y)"
 							+ "CREATE (m)-[:LANGUAGE]->(l)"
 							+ "CREATE (m)-[:GENRE]->(g)",
-							title,imgUrl,duration,director,country.toUpperCase(),mainCharacter,releaseYear,language.toUpperCase(),genre.toUpperCase()));
+							id, title,imgUrl,duration,director,country.toUpperCase(),mainCharacter,releaseYear,language.toUpperCase(),genre.toUpperCase()));
 
 					return "Película registrada exitosamente";
 				}
@@ -164,6 +164,47 @@ public class Movie implements AutoCloseable {
 						String name = registersData.get(0).asString();
 
 						resultList.add(name);
+					}
+					return resultList;
+				}
+			});
+
+		}
+	}
+	
+	/**
+	 * Permite obtener la lista de películas a la que el usuario no ha calificado.
+	 * @param max
+	 * @return
+	 */
+	public JSONArray getMoviesList(String userId, int max	) {
+
+		try (Session session = connection.startSession()) {
+			return session.readTransaction(new TransactionWork<JSONArray>() {
+				
+				@Override
+				public JSONArray execute(Transaction tx) {
+					
+					Result result = tx.run(String.format("MATCH (u:user) WHERE u.id = '%s'"
+							+ "MATCH (m:movie) WHERE NOT (u)-[:like]->(m) AND NOT (u)-[:dislike]->(m)"
+							+ "RETURN m.id as id, m.title as title, m.image as image LIMIT %s",userId,max));
+
+					List<Record> registers = result.list();
+					JSONArray resultList = new JSONArray();
+					
+					for (int i = 0; i < registers.size(); i++) {
+						
+						JSONObject movieData = new JSONObject();
+						
+						var registerData = registers.get(i).values();
+						
+						//anadir info de la pelicula a un objeto JSON
+						movieData.put("id", registerData.get(0).asString());
+						movieData.put("title", registerData.get(1).asString());
+						movieData.put("image", registerData.get(2).asString());
+						
+
+						resultList.add(movieData);
 					}
 					return resultList;
 				}

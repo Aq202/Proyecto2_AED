@@ -40,12 +40,12 @@ const NavBar = () => {
 				</li>
 				<li>
 					<NavLink to="/showMovies" onClick={handlePageChange}>
-						Mostrar Películas
+						Nueva
 					</NavLink>
 				</li>
 				<li>
-					<NavLink to="/recomendations" onClick={handlePageChange}>
-						Recomendaciones
+					<NavLink to="/rateMovies" onClick={handlePageChange}>
+						Calificar Películas
 					</NavLink>
 				</li>
 			</ul>
