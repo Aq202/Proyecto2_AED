@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import TextBox from "./TextBox";
 
-const DirectorsTextBox = ({ defaultValue, onChange, name }) => {
+const MainCharacterTextBox = ({ defaultValue, name, onChange }) => {
 	const [options, setOptions] = useState(null);
 	const [abort, setAbort] = useState(null);
 
-	const searchDirectorsOptions = text => {
+	const searchOptions = text => {
 		//abort previous request
 		abort?.abort();
 
@@ -14,7 +14,7 @@ const DirectorsTextBox = ({ defaultValue, onChange, name }) => {
 		let abortController = new AbortController();
 		setAbort(abortController);
 
-		const url = `./searchDirectors?name=${text}`;
+		const url = `./searchMainCharacter?name=${text}`;
 		let response;
 		fetch(url, {
 			signal: abortController.signal,
@@ -33,7 +33,7 @@ const DirectorsTextBox = ({ defaultValue, onChange, name }) => {
 			})
 			.catch(err => {
 				setOptions(null);
-				console.error("Error al solicitar lista de directores: ", err);
+				console.error("Error al solicitar lista de personajes principales: ", err);
 			});
 	};
 
@@ -43,9 +43,9 @@ const DirectorsTextBox = ({ defaultValue, onChange, name }) => {
 			onChange={onChange}
 			name={name}
 			options={options}
-			searchOptions={searchDirectorsOptions}
+			searchOptions={searchOptions}
 		/>
 	);
 };
 
-export default DirectorsTextBox;
+export default MainCharacterTextBox;

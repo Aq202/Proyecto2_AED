@@ -1,8 +1,7 @@
-package Servlets;
+
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,31 +13,28 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import AccessLayer.Movie;
-import AccessLayer.User;
 import Exceptions.BadRequestException;
 import Exceptions.InternalErrorException;
 
 /**
- * Servlet implementation class SearchDirectors
+ * Servlet implementation class SearchMainCharacter
  */
-@WebServlet("/searchDirectors")
-public class SearchDirectors extends HttpServlet {
+@WebServlet("/searchMainCharacter")
+public class SearchMainCharacter extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public SearchMainCharacter() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
-	 * @see HttpServlet#HttpServlet()
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	public SearchDirectors() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 
 		response.setContentType("application/json");
@@ -47,25 +43,29 @@ public class SearchDirectors extends HttpServlet {
 
 		try {
 			String name = request.getParameter("name");
+			String max = request.getParameter("max");
 
 			if (name == null)
 				throw new BadRequestException("La propiedad 'name' es requerida.");
+			
+			//parse max to int
+			int maxResults = 5; //default value
+			try {
+				maxResults = Integer.parseInt(max);
+			}catch(NumberFormatException ex) {
+			}
 
-			JSONArray directorsList = new JSONArray();
+			JSONArray resultsList;
 
 			try (Movie movie = new Movie()) {
-				LinkedList<String> directors = movie.searchDirectorsByName(name);
-
-				for (int i = 0; i < directors.size(); i++) {
-					directorsList.add(directors.get(i));
-				}
+				resultsList = movie.searchMainCharacterByName(name, maxResults);
 
 			} catch (Exception e) {
 				throw new InternalErrorException(e.getMessage());
 			}
 
-			myResponse.put("length", directorsList.size()); // Guardo la cantidad de directores
-			myResponse.put("names", directorsList);
+			myResponse.put("length", resultsList.size()); // Guardo la cantidad de directores
+			myResponse.put("names", resultsList);
 			out.println(myResponse);
 			out.flush();
 
@@ -83,11 +83,9 @@ public class SearchDirectors extends HttpServlet {
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

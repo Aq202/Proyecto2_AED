@@ -82,14 +82,14 @@ public class User implements AutoCloseable {
 							+ "WITH u MATCH (u)-[b_r:BIRTH_YEAR]->() DELETE b_r "
 							+ "WITH u MATCH (u)-[l_r:LANGUAGE]->() DELETE l_r "
 							+ "MERGE (s:sex {val:'%s'}) "
-							+ "MERGE (n:nationality {val:'%s'}) "
+							+ "MERGE (n:country {val:'%s'}) "
 							+ "MERGE (l:language {val:'%s'}) "
 							+ "MERGE (b:birth_year {val:'%s'}) "
 							+ "CREATE (u)-[:SEX]->(s) "
 							+ "CREATE (u)-[:NATIONALITY]->(n) "
 							+ "CREATE (u)-[:LANGUAGE]->(l) "
 							+ "CREATE (u)-[:BIRTH_YEAR]->(b) ",
-							id,userName,sex, nationality, language,birthYear));
+							id,userName,sex.toUpperCase(), nationality.toUpperCase(), language.toUpperCase(),birthYear));
 
 					return "OK";
 				}

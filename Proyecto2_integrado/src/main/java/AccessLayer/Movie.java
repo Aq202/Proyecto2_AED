@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import org.neo4j.driver.Session;
 import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 
@@ -57,7 +58,7 @@ public class Movie implements AutoCloseable {
 							+ "CREATE (m)-[:RELEASE_YEAR]->(y)"
 							+ "CREATE (m)-[:LANGUAGE]->(l)"
 							+ "CREATE (m)-[:GENRE]->(g)",
-							title,duration,director,country,mainCharacter,releaseYear,language,genre));
+							title,duration,director,country.toUpperCase(),mainCharacter,releaseYear,language.toUpperCase(),genre.toUpperCase()));
 
 					return "Película registrada exitosamente";
 				}
@@ -77,29 +78,91 @@ public class Movie implements AutoCloseable {
 	 * @param name. Nombre completo o fragmento del director.
 	 * @return
 	 */
-	public LinkedList<String> searchDirectorsByName(String name) {
+	public JSONArray searchDirectorsByName(String name, int max) {
 
 		try (Session session = connection.startSession()) {
-			return session.readTransaction(new TransactionWork<LinkedList<String>>() {
+			return session.readTransaction(new TransactionWork<JSONArray>() {
 				
 				@Override
-				public LinkedList<String> execute(Transaction tx) {
+				public JSONArray execute(Transaction tx) {
 					
-					Result result = tx.run(String.format("MATCH (m:movie) WHERE m.director CONTAINS '%s' RETURN m.director AS director", name));
-					LinkedList<String> directorsList = new LinkedList<String>();
+					Result result = tx.run(String.format("MATCH (d:director) WHERE d.val CONTAINS '%s' RETURN d.val AS director LIMIT %s", name,max));
+
 					List<Record> registers = result.list();
+					JSONArray directorsList = new JSONArray();
+					
 					for (int i = 0; i < registers.size(); i++) {
 
 						var registersData = registers.get(i).values();
-						JSONArray directorsData = new JSONArray();
+						String directorName = registersData.get(0).asString();
 
-						directorsData.add(registersData.get(0).asString());
-						directorsData.add(String.valueOf(registersData.get(1).asInt()));
-
-						directorsList.add(directorsData.toJSONString());
+						directorsList.add(directorName);
 					}
-
 					return directorsList;
+				}
+			});
+
+		}
+	}
+	
+	/**
+	 * Método que permite obtener los nombres de los personajes principales que al menos contengan la cadena ingresada.
+	 * @param name. Nombre completo o fragmento
+	 * @return
+	 */
+	public JSONArray searchMainCharacterByName(String name, int max) {
+
+		try (Session session = connection.startSession()) {
+			return session.readTransaction(new TransactionWork<JSONArray>() {
+				
+				@Override
+				public JSONArray execute(Transaction tx) {
+					
+					Result result = tx.run(String.format("MATCH (d:mainCharacter) WHERE d.val CONTAINS '%s' RETURN d.val LIMIT %s", name,max));
+
+					List<Record> registers = result.list();
+					JSONArray resultList = new JSONArray();
+					
+					for (int i = 0; i < registers.size(); i++) {
+
+						var registersData = registers.get(i).values();
+						String name = registersData.get(0).asString();
+
+						resultList.add(name);
+					}
+					return resultList;
+				}
+			});
+
+		}
+	}
+	
+	/**
+	 * Método que permite obtener los nombres de generos de películas que al menos contengan la cadena ingresada.
+	 * @param name. Nombre completo o fragmento
+	 * @return
+	 */
+	public JSONArray searchGenreByName(String name, int max) {
+
+		try (Session session = connection.startSession()) {
+			return session.readTransaction(new TransactionWork<JSONArray>() {
+				
+				@Override
+				public JSONArray execute(Transaction tx) {
+					
+					Result result = tx.run(String.format("MATCH (d:genre) WHERE d.val CONTAINS '%s' RETURN d.val LIMIT %s", name.toUpperCase(),max));
+
+					List<Record> registers = result.list();
+					JSONArray resultList = new JSONArray();
+					
+					for (int i = 0; i < registers.size(); i++) {
+
+						var registersData = registers.get(i).values();
+						String name = registersData.get(0).asString();
+
+						resultList.add(name);
+					}
+					return resultList;
 				}
 			});
 

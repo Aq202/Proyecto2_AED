@@ -27,6 +27,7 @@ const TextBox = ({ searchOptions, options, defaultValue, onChange, name }) => {
 
 	useEffect(() => {
 		if (Array.isArray(options) && options.length > 0) setHideOptions(false);
+		else setHideOptions(true);
 	}, [options]);
 
 	const showOptions = () => optionsContainerRef.current?.classList.remove("hide");
@@ -47,7 +48,8 @@ const TextBox = ({ searchOptions, options, defaultValue, onChange, name }) => {
 		//search for options
 		else if (searchOptions) {
 			const value = e.target.value.trim();
-			if (value !== "") searchOptions(value);
+			confirmText();
+			searchOptions(value);
 		}
 	};
 
