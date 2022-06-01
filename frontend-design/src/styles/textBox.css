@@ -1,0 +1,52 @@
+.textBox input[type="text"] {
+    width: 100%;
+    padding: 15px 10px 13px 10px;
+    border: 1.5px #969696 solid;
+    color: var(--gray-text-color);
+    border-radius: 5px;
+    font-size: inherit;
+    position: relative;
+    outline: none;
+    background-color: var(--form-backgroud);
+    font-family: var(--text-font);
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+.textBox {
+    position: relative;
+    max-width: 50%;
+}
+
+.textBox .options-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 95%;
+    margin: 0 2.5%;
+    box-shadow: 0px 1px 3px 1px rgba(0, 0, 0, 0.2);
+
+}
+
+.textBox .option {
+    box-sizing: border-box;
+    padding: 10px 10px;
+    width: 100%;
+    background-color: rgb(241 241 241);
+    width: 100%;
+    cursor: pointer;
+}
+
+.textBox .option:not(:nth-child(1)) {
+    border-top: 2px white solid;
+}
+
+.textBox .selected,
+.textBox .options-container:not(.selecting) .option:hover {
+    background-color: #0c86bf;
+    font-weight: bold;
+}
+
+.textBox .hide {
+    visibility: hidden;
+}
