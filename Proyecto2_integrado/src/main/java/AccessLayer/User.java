@@ -103,6 +103,34 @@ public class User implements AutoCloseable {
 		}
 
 	}
+	
+	public String likeMovie(String idU, String idM, boolean like) throws Exception{
+		try (Session session = connection.startSession()) {
+			final String status = like ? "LIKE" : "DISLIKE";		
+			final String prevSt = like ? "DISLIKE" : "LIKE";
+
+			String result = session.writeTransaction(new TransactionWork<String>()
+
+			{
+				@Override
+				public String execute(Transaction tx) {
+					tx.run(String.format(
+							"MATCH (u:user {id:'%s'})"
+							+ "MATCH (m:movie {id:'%s'})"
+							+ "CREATE (u)-[:%s]->(m) "
+							+ "WITH m MATCH (u)-[p_s:%s]->() DELETE p_s ",
+							idU,idM,status,prevSt));
+					return "OK";
+				}
+			}
+
+			);
+
+			return result;
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
 
 	public LinkedList<String> getUsersList() {
 
