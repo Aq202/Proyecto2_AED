@@ -8,6 +8,7 @@ import ProfilePage from "./ProfilePage";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MoviesPage from "./NewMoviePage";
 import RateMoviesPage from "./RateMoviesPage";
+import RecommendationsPage from "./RecommendationPage";
 
 function App() {
 	const [isWelcomeOpen, openWelcome, closeWelcome] = usePopUp();
@@ -28,6 +29,8 @@ function App() {
 					<Route path="/profile" element={<ProfilePage />} />
 					<Route path="/showMovies" element={<MoviesPage />} />
 					<Route path="/rateMovies" element={<RateMoviesPage />} />
+					<Route path="/recommendations" element={<RecommendationsPage />} />
+					<Route path="/*" element={<ProfilePage />} />
 				</Routes>
 			</Router>
 			{isWelcomeOpen

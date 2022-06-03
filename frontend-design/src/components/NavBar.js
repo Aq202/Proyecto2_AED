@@ -24,10 +24,10 @@ const NavBar = () => {
 	};
 
 	const handlePageChange = () => {
-		if (navBarRef.current.classList.contains("showMenu")){
+		if (navBarRef.current.classList.contains("showMenu")) {
 			navBarRef.current.classList.remove("showMenu");
-            setShowCloseButton(false);
-        }
+			setShowCloseButton(false);
+		}
 	};
 
 	return (
@@ -46,6 +46,11 @@ const NavBar = () => {
 				<li>
 					<NavLink to="/rateMovies" onClick={handlePageChange}>
 						Calificar Películas
+					</NavLink>
+				</li>
+				<li>
+					<NavLink to="/recommendations" onClick={handlePageChange}>
+						Recomendaciones
 					</NavLink>
 				</li>
 			</ul>
