@@ -17,8 +17,7 @@ const MoviesPage = () => {
 
 			<div className="body-page">
 				<p className="instruccions">
-					Por favor, ingresa tu información personal para que podamos realizar mejores
-					recomendaciones que se adapten de mejor manera a tí.
+					Por favor, ingresa los datos de tus películas favoritas para que podamos recomendarlas y así otras personas también puedan disfrutarlas.
 				</p>
 
 				<NewMovieForm />	

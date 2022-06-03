@@ -147,6 +147,7 @@ const ProfileForm = () => {
 				} else throw null;
 			})
 			.catch(err => {
+				setIsLoading(false);
 				setShowButton(true);
 				openError();
 			});

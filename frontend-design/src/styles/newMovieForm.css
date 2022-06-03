@@ -1,0 +1,142 @@
+.newMovieForm {
+    --form-backgroud: var(--background-color);
+    width: 70%;
+    background-color: var(--form-backgroud);
+    padding: 25px;
+    margin: auto;
+    font-size: 17px;
+    box-sizing: border-box;
+
+}
+
+.newMovieForm form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    box-sizing: border-box;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.newMovieForm .inputContainer {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+
+}
+
+.newMovieForm .inputContainer.inputBox input,
+.newMovieForm .inputContainer.inputBox select {
+    width: 100%;
+    padding: 15px 10px 13px 10px;
+    border: 1.5px #969696 solid;
+    color: var(--gray-text-color);
+    border-radius: 5px;
+    font-size: inherit;
+    position: relative;
+    outline: none;
+    background-color: var(--form-backgroud);
+    font-family: var(--text-font);
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+.newMovieForm .shortInput {
+    max-width: 150px;
+}
+
+.newMovieForm .inputContainer>label {
+    color: #2c2c2c;
+    font-weight: bold;
+    position: absolute;
+    top: -13px;
+    left: 10px;
+    background-color: var(--form-backgroud);
+    padding: 0 3px 0 3px;
+    z-index: 1;
+}
+
+
+.newMovieForm .buttonContainer {
+    grid-column: span 2;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+}
+
+.newMovieForm .buttonContainer button {
+    font-size: 20px;
+    width: 40%;
+    max-width: 400px;
+    min-width: 100px;
+}
+
+.newMovieForm .title {
+    white-space: nowrap;
+    max-width: calc(100% - 20px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.newMovieForm .error-message {
+    font-size: 15px;
+    color: var(--error-color);
+    font-weight: bold;
+    grid-column: span 2;
+    margin: 0;
+    text-align: justify;
+}
+
+.newMovieForm .spinner {
+    color: #1E69E4;
+    margin-top: 20px;
+}
+
+.newMovieForm .shortInput-container {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+}
+
+
+@media only screen and (max-width:900px) {
+    .newMovieForm {
+        width: 85%;
+    }
+}
+
+@media only screen and (max-width:750px) {
+    .newMovieForm {
+        width: 100%;
+    }
+}
+
+
+@media only screen and (max-width:680px) {
+
+    .newMovieForm form {
+        grid-template-columns: 1fr;
+    }
+
+    .newMovieForm .buttonContainer {
+
+        grid-column: 1;
+    }
+
+    .newMovieForm .shortInput {
+        max-width: none;
+    }
+
+}
+
+
+@media only screen and (max-width:400px) {
+
+    .newMovieForm .shortInput-container {
+        flex-direction: column;
+    }
+
+    .newMovieForm .shortInput {
+        max-width: none;
+    }
+}
