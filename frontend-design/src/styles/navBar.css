@@ -72,7 +72,7 @@
     user-select: none;
 }
 
-@media only screen and (max-width:500px) {
+@media only screen and (max-width:600px) {
     #navBar>ul.menu {
         position: fixed;
         top: 0;

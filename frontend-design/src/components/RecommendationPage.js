@@ -8,17 +8,17 @@ import { useSession } from "./hooks/useSession";
 
 const RecommendationsPage = () => {
 	const [movie, setMovie] = useState();
-	const { id: userId } = useSession(true);
+	const { id } = useSession(true);
 
 	useEffect(() => {
-    console.log(userId)
+		console.log(id);
 		requestRecommendation();
-	}, [userId]);
+	}, [id]);
 
-	const handleOptionChange = ({ id, status }) => {
+	const handleOptionChange = ({ id:movieId, status }) => {
 		const url =
 			"./reactToMovie?" +
-			new URLSearchParams({ user: userId, movie: id, option: status }).toString();
+			new URLSearchParams({ user: id, movie: movieId, option: status }).toString();
 
 		fetch(url)
 			.then(r => {
@@ -34,9 +34,12 @@ const RecommendationsPage = () => {
 	const makeAsViewed = () => handleOptionChange({ id: movie.id, status: 3 });
 
 	const requestRecommendation = () => {
-		if (!userId) return;
+		if (!id) {
+			console.warn("El ID es invalido del usuario");
+			return;
+		}
 		console.log("Searching recommendations...");
-		const url = `./getRecommendation?userId=${userId}`;
+		const url = `./getRecommendation?userId=${id}`;
 
 		let response;
 		fetch(url)
@@ -61,16 +64,20 @@ const RecommendationsPage = () => {
 					preferencias. Califica con un 👍 o 👎 cada una de las opciones para ver la siguiente.
 				</p>
 
-				<MovieOption
-					id={movie.id}
-					imageUrl={movie.image}
-					title={movie.title}
-					changeStatus={handleOptionChange}
-				/>
+				{movie ? (
+					<>
+						<MovieOption
+							id={movie.id}
+							imageUrl={movie.image}
+							title={movie.title}
+							changeStatus={handleOptionChange}
+						/>
 
-				<button className="skip" onClick={makeAsViewed}>
-					Saltar
-				</button>
+						<button className="skip" onClick={makeAsViewed}>
+							Saltar
+						</button>
+					</>
+				) : null}
 			</div>
 		</div>
 	);

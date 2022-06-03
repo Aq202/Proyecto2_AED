@@ -11,23 +11,19 @@ const MovieOption = ({ id, title, imageUrl, changeStatus }) => {
 	const [image, setImage] = useState();
 
 	useEffect(() => {
-		const requestImage = async () => {
+
 			const img = new Image();
 			img.src = imageUrl;
 			img.onload = () => {
-				alert("loaded");
 				setImage(imageUrl);
 				console.log("image", imageUrl)
 			};
 			img.onerror = () => {
-				alert("error");
-				setImage(getDefaultMovie());
 				console.log("image", imageUrl)
+				setImage(getDefaultMovie());
 			};
-		};
 
-		requestImage();
-	}, []);
+	}, [imageUrl]);
 
 	useEffect(() => {
 		if (status !== null) changeStatus({ id, status });
