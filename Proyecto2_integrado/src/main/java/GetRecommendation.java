@@ -49,18 +49,18 @@ public class GetRecommendation extends HttpServlet {
 			
 		
 
-			JSONArray recommendationsList;
+			JSONObject recommendationData;
 
 			try (Movie movie = new Movie()) {
-				recommendationsList = movie.getRecommendation(userId);
+				recommendationData = movie.getRecommendation(userId);
 
 
 			} catch (Exception e) {
 				throw new InternalErrorException(e.getMessage());
 			}
 
-			myResponse.put("length", recommendationsList.size()); // Guardo la cantidad de directores
-			myResponse.put("result", recommendationsList);
+			myResponse.put("length", recommendationData.size()); // Guardo la cantidad de directores
+			myResponse.put("result", recommendationData);
 			out.println(myResponse);
 			out.flush();
 

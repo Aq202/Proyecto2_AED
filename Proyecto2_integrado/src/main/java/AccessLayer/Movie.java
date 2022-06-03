@@ -279,16 +279,16 @@ public class Movie implements AutoCloseable {
 
 	}
 
-	public JSONArray getRecommendation(String userId) {
+	public JSONObject getRecommendation(String userId) {
 
 		try (Session session = connection.startSession()) {
 
 			runMoviesGraph(session);
 
-			return session.readTransaction(new TransactionWork<JSONArray>() {
+			return session.readTransaction(new TransactionWork<JSONObject>() {
 
 				@Override
-				public JSONArray execute(Transaction tx) {
+				public JSONObject execute(Transaction tx) {
 
 					Result result = tx.run(String.format("MATCH (u:user) WHERE u.id = '%s' \r\n"
 							+ "MATCH (source:movie) WHERE (u)-[:LIKE]->(source) \r\n"
@@ -304,11 +304,11 @@ public class Movie implements AutoCloseable {
 							+ "ORDER BY totalCost\r\n" + "LIMIT 1", userId));
 
 					List<Record> registers = result.list();
-					JSONArray resultList = new JSONArray();
+					JSONObject movieData = new JSONObject();
 
 					for (int i = 0; i < registers.size(); i++) {
 
-						JSONObject movieData = new JSONObject();
+						
 
 						var registerData = registers.get(i).values();
 
@@ -318,9 +318,9 @@ public class Movie implements AutoCloseable {
 						movieData.put("image", registerData.get(3).asString());
 						movieData.put("totalCost", registerData.get(4).asDouble());
 
-						resultList.add(movieData);
+						
 					}
-					return resultList;
+					return movieData;
 				}
 			});
 
