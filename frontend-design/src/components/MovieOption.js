@@ -4,52 +4,92 @@ import PropTypes from "prop-types";
 import gsap from "gsap";
 import random from "../scripts/random";
 
-const MovieOption = ({ id, title, imageUrl, changeStatus }) => {
+const MovieOption = ({
+	userId,
+	id,
+	title,
+	imageUrl,
+	changeStatus,
+	blockAtFirst,
+	defaultStatus,
+}) => {
 	const optionRef = useRef();
 	const buttonsContainerRed = useRef();
-	const [status, setStatus] = useState(null);
+	const [status, setStatus] = useState(defaultStatus ?? null);
 	const [image, setImage] = useState();
+	const [block, setBlock] = useState(false);
 
 	useEffect(() => {
-
-			const img = new Image();
-			img.src = imageUrl;
-			img.onload = () => {
-				setImage(imageUrl);
-				console.log("image", imageUrl)
-			};
-			img.onerror = () => {
-				console.log("image", imageUrl)
-				setImage(getDefaultMovie());
-			};
-
+		const img = new Image();
+		img.src = imageUrl;
+		img.onload = () => {
+			setImage(imageUrl);
+			console.log("image", imageUrl);
+		};
+		img.onerror = () => {
+			console.log("image", imageUrl);
+			setImage(getDefaultMovie());
+		};
 	}, [imageUrl]);
 
 	useEffect(() => {
-		if (status !== null) changeStatus({ id, status });
+		if (status !== null) {
+			if (blockAtFirst === true && block === true) return;
+			else if (blockAtFirst === true) setBlock(true);
+
+			const makeRequest = async () => {
+				await modifyMovieStatus();
+				if (changeStatus) changeStatus();
+			};
+			makeRequest();
+
+			//añadir estilos:
+
+			if (status == "1") {
+				//like
+				optionRef.current.classList.add("liked");
+				optionRef.current.classList.remove("disliked");
+			} else if (status == "2") {
+				//dilike
+				optionRef.current.classList.add("disliked");
+				optionRef.current.classList.remove("liked");
+			} else {
+				optionRef.current.classList.remove("liked");
+				optionRef.current.classList.remove("disliked");
+			}
+		}
 	}, [status]);
 
 	useEffect(() => {
 		setStatus(null);
 		optionRef.current.classList.remove("liked");
 		optionRef.current.classList.remove("disliked");
+		setBlock(false);
 	}, [id]);
 
 	const hideButtonsContainer = e => {
 		if (status !== "0" && status !== null) {
 			setStatus("0"); //0: nothing
-			optionRef.current.classList.remove("liked");
-			optionRef.current.classList.remove("disliked");
+		}
+	};
+
+	const modifyMovieStatus = async () => {
+		const url =
+			"./reactToMovie?" +
+			new URLSearchParams({ user: userId, movie: id, option: status }).toString();
+
+		try {
+			let request = await fetch(url);
+			if (request.ok === true) console.info("Estado de película modificado a: ", status);
+			else console.warn("La película no se marcó como like/dislike");
+		} catch (err) {
+			console.error("Error al marcar like/dislike: ", err);
 		}
 	};
 
 	const handleLikeClick = e => {
 		if (status === "0" || status === null) {
 			e.stopPropagation();
-			//agregar estilo liked
-			optionRef.current.classList.add("liked");
-			optionRef.current.classList.remove("disliked");
-
 			//modificar status. 1 = liked
 			setStatus("1");
 		}
@@ -58,9 +98,6 @@ const MovieOption = ({ id, title, imageUrl, changeStatus }) => {
 	const handleDislikeClick = e => {
 		if (status == "0" || status === null) {
 			e.stopPropagation();
-			//agregar estilo disliked
-			optionRef.current.classList.add("disliked");
-			optionRef.current.classList.remove("liked");
 
 			//modificar status. 2 = disliked
 			setStatus("2");

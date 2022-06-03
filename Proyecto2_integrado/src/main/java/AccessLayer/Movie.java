@@ -191,7 +191,7 @@ public class Movie implements AutoCloseable {
 				public JSONArray execute(Transaction tx) {
 
 					Result result = tx.run(String.format("MATCH (u:user) WHERE u.id = '%s'"
-							+ "MATCH (m:movie) WHERE NOT (u)-[:like]->(m) AND NOT (u)-[:dislike]->(m)"
+							+ "MATCH (m:movie) WHERE NOT (u)-[:LIKE]->(m) AND NOT (u)-[:DISLIKE]->(m)"
 							+ "RETURN m.id as id, m.title as title, m.image as image LIMIT %s", userId, max));
 
 					List<Record> registers = result.list();
@@ -292,7 +292,7 @@ public class Movie implements AutoCloseable {
 
 					Result result = tx.run(String.format("MATCH (u:user) WHERE u.id = '%s' \r\n"
 							+ "MATCH (source:movie) WHERE (u)-[:LIKE]->(source) \r\n"
-							+ "MATCH (target:movie) WHERE NOT (u)-[:LIKE]->(target) AND NOT (u)-[:DISLIKE]->(target)\r\n"
+							+ "MATCH (target:movie) WHERE NOT (u)-[:LIKE]->(target) AND NOT (u)-[:DISLIKE]->(target) AND NOT (u)-[:VIEWED]->(target)\r\n"
 							+ "  \r\n" + "CALL gds.shortestPath.yens.stream('moviesGraph', {\r\n"
 							+ "    sourceNode: source,\r\n" + "    targetNode: target,\r\n" + "    k: 25,\r\n"
 							+ "    relationshipWeightProperty: 'score'\r\n" + "})\r\n"

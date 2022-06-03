@@ -5,13 +5,17 @@ import banner from "../resources/images/recomendationsBanner.svg";
 import MovieOption from "./MovieOption";
 import SendRecommendationsButton from "./SendRecommendationsButton";
 import { useSession } from "./hooks/useSession";
+import { useNavigate } from "react-router-dom";
+import InstructionsPopUp from "./InstructionsPopUp";
+import ReactDOM from "react-dom";
 
 const RateMoviesPage = () => {
 	const [movies, setMovies] = useState([]);
 	const [blockSearch, setBlockSearch] = useState();
-	const { id: userId } = useSession(true);
 	const [interruption, setInterruption] = useState();
 
+	const [{ id: userId }, isAlertOpen, closeAlert] = useSession(true);
+	const navigate = useNavigate();
 	useEffect(() => {
 		searchMovies();
 	}, [userId]);
@@ -52,36 +56,38 @@ const RateMoviesPage = () => {
 			.catch(err => console.error("Error al consultar lista de peliculas: ", err));
 	};
 
-	const handleChange = ({ id, status }) => {
-		const url =
-			"./reactToMovie?" +
-			new URLSearchParams({ user: userId, movie: id, option: status }).toString();
-
-		fetch(url)
-			.then(r => {
-				if (r.ok === true) console.info("Película marcada como like/dislike");
-				else console.warn("La película no se marcó como like/dislike");
-			})
-			.catch(err => console.error("Error al marcar like/dislike: ", err));
-	};
-
 	return (
 		<div id="recomendationPage">
 			<Banner bannerImage={banner} title="Calificar Películas" />
 
-			<SendRecommendationsButton />
-
 			<div className="options-container">
 				{movies?.map(mov => (
 					<MovieOption
+						userId={userId}
 						imageUrl={mov.image}
 						title={mov.title}
 						id={mov.id}
 						key={mov.id}
-						changeStatus={handleChange}
 					/>
 				))}
 			</div>
+
+
+			{
+				isAlertOpen   
+					? ReactDOM.createPortal(
+							<InstructionsPopUp
+								close={closeAlert}
+								instructions={[
+									"Más despacio vaquero...",
+									"Ingresa tus datos de perfil antes de continuar",
+								]}
+								callback={() => navigate("/profile")}
+							/>,
+							document.querySelector("body")
+					  )
+					: null
+			}
 		</div>
 	);
 };
