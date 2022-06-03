@@ -9,22 +9,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 
+import AccessLayer.Movie;
 import AccessLayer.User;
 import Exceptions.BadRequestException;
 import Exceptions.InternalErrorException;
 
-
 /**
  * Servlet implementation class UserServlet
  */
-@WebServlet("/createUser")
-public class LikeMovie extends HttpServlet {
+@WebServlet("/reactToMovie")
+public class ReactToMovie extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public LikeMovie() {
+	public ReactToMovie() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -45,41 +45,57 @@ public class LikeMovie extends HttpServlet {
 
 			String userId = request.getParameter("user");
 			String movieId = request.getParameter("movie");
-			String like_param = request.getParameter("like");
+			String option_param = request.getParameter("option");
 
 			if (userId == null)
 				throw new BadRequestException("La propiedad 'user' es requerida.");
 			if (movieId == null)
 				throw new BadRequestException("La propiedad 'movie' es requerida.");
-			if(like_param == null)
+			if (option_param == null)
 				throw new BadRequestException("La propiedad 'like' es requerida.");
 			try {
-				boolean like = Boolean.getBoolean(like_param);
-				
+				int option = Integer.parseInt(option_param);
+
+				if (option != 0 && option != 1 && option != 2 && option != 3)
+					throw new BadRequestException(
+							"La propiedad 'like' solo admite los valores 0(estado default), 1(like) y 2(dislike).");
+
 				try (User user = new User()) {
-					String result = user.likeMovie(userId, movieId, like);
+					String result;
+					if (option == 0)
+						result = user.clearMovieReaction(userId, movieId);
+					else
+						result = user.reactToMovie(userId, movieId, option);
 					
+					//like: encontrar películas similares
+					if(option == 1) {
+						try(Movie movie = new Movie()){
+							movie.findSimilarMovies(userId, movieId);
+						}catch(Exception e) {
+							throw new InternalErrorException(e.getMessage());
+						}
+					}
+
 					myResponse.put("result", result);
-					myResponse.put("userId", userId); //enviar userId
+					myResponse.put("userId", userId); // enviar userId
 
 				} catch (Exception e) {
 
 					throw new InternalErrorException(e.getMessage());
 				}
-			}catch(ClassCastException e) {
+			} catch (ClassCastException e) {
 				throw new BadRequestException("La propiedad like debe ser 'true' o 'false'.");
 			}
 
-				out.println(myResponse);
-				out.flush();
+			out.println(myResponse);
+			out.flush();
 
 		} catch (BadRequestException ex) {
 			JSONObject errorResponse = new JSONObject();
 			errorResponse.put("error", ex.getMessage());
 			out.println(errorResponse);
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-		}
-		catch (InternalErrorException ex) {
+		} catch (InternalErrorException ex) {
 			JSONObject errorResponse = new JSONObject();
 			errorResponse.put("error", ex.getMessage());
 			out.println(errorResponse);

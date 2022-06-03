@@ -9,41 +9,39 @@ const MovieOption = ({ id, title, imageUrl, changeStatus }) => {
 	const [status, setStatus] = useState(null);
 
 	useEffect(() => {
-		changeStatus({ id, status });
+		if (status !== null) changeStatus({ id, status });
 	}, [status]);
 
 	const hideButtonsContainer = e => {
-		if (status !== null) {
-			setStatus(null);
+		if (status !== "0") {
+			setStatus("0"); //0: nothing
 			optionRef.current.classList.remove("liked");
 			optionRef.current.classList.remove("disliked");
 		}
 	};
 
 	const handleLikeClick = e => {
-		
-		if (status === null) {
+		if (status === "0" || status === null) {
 			e.stopPropagation();
 			//agregar estilo liked
 			optionRef.current.classList.add("liked");
 			optionRef.current.classList.remove("disliked");
 
-			//modificar status. True = liked
-			setStatus(true);
+			//modificar status. 1 = liked
+			setStatus("1");
 		}
 	};
 
 	const handleDislikeClick = e => {
-		
-		if (status == null) {
+		if (status == "0" || status === null) {
 			e.stopPropagation();
 			//agregar estilo disliked
 			optionRef.current.classList.add("disliked");
 			optionRef.current.classList.remove("liked");
 
-			//modificar status. False = disliked
-			setStatus(false);
-		} 
+			//modificar status. 2 = disliked
+			setStatus("2");
+		}
 	};
 
 	return (

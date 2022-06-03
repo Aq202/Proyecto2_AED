@@ -20,6 +20,7 @@ public class User implements AutoCloseable {
 
 	/**
 	 * Metodo para agregar un nuevo usuario en la base de datos.
+	 * 
 	 * @param id
 	 * @param userName
 	 * @param sex
@@ -29,10 +30,10 @@ public class User implements AutoCloseable {
 	 * @return
 	 * @throws Exception
 	 */
-	public String createUser(String id, String userName, String sex, String nationality, String language, int birthYear) throws Exception{
+	public String createUser(String id, String userName, String sex, String nationality, String language, int birthYear)
+			throws Exception {
 
 		try (Session session = connection.startSession()) {
-
 
 			String result = session.writeTransaction(new TransactionWork<String>()
 
@@ -40,16 +41,12 @@ public class User implements AutoCloseable {
 				@Override
 				public String execute(Transaction tx) {
 					tx.run(String.format(
-							"CREATE (u:user {id:'%s', name:'%s'})"
-							+ "MERGE (s:sex {val:'%s'})"
-							+ "MERGE (n:nationality {val:'%s'})"
-							+ "MERGE (l:language {val:'%s'})"
-							+ "MERGE (b:birth_year {val:'%s'})"
-							+ "CREATE (u)-[:SEX]->(s)"
-							+ "CREATE (u)-[:NATIONALITY]->(n)"
-							+ "CREATE (u)-[:LANGUAGE]->(l)"
-							+ "CREATE (u)-[:BIRTH_YEAR]->(b)",
-							id,userName,sex, nationality, language,birthYear));
+							"CREATE (u:user {id:'%s', name:'%s'})" + "MERGE (s:sex {val:'%s'})"
+									+ "MERGE (n:nationality {val:'%s'})" + "MERGE (l:language {val:'%s'})"
+									+ "MERGE (b:birth_year {val:'%s'})" + "CREATE (u)-[:SEX]->(s)"
+									+ "CREATE (u)-[:NATIONALITY]->(n)" + "CREATE (u)-[:LANGUAGE]->(l)"
+									+ "CREATE (u)-[:BIRTH_YEAR]->(b)",
+							id, userName, sex, nationality, language, birthYear));
 
 					return "Usuario registrado exitosamente";
 				}
@@ -63,11 +60,11 @@ public class User implements AutoCloseable {
 		}
 
 	}
-	
-	public String updateUser(String id, String userName, String sex, String nationality, String language, int birthYear) throws Exception{
+
+	public String updateUser(String id, String userName, String sex, String nationality, String language, int birthYear)
+			throws Exception {
 
 		try (Session session = connection.startSession()) {
-
 
 			String result = session.writeTransaction(new TransactionWork<String>()
 
@@ -75,21 +72,17 @@ public class User implements AutoCloseable {
 				@Override
 				public String execute(Transaction tx) {
 					tx.run(String.format(
-							"MATCH (u:user {id:'%s'})"
-							+ "SET u.name = '%s'"
-							+ "WITH u MATCH (u)-[s_r:SEX]->() DELETE s_r "
-							+ "WITH u MATCH (u)-[n_r:NATIONALITY]->() DELETE n_r "
-							+ "WITH u MATCH (u)-[b_r:BIRTH_YEAR]->() DELETE b_r "
-							+ "WITH u MATCH (u)-[l_r:LANGUAGE]->() DELETE l_r "
-							+ "MERGE (s:sex {val:'%s'}) "
-							+ "MERGE (n:country {val:'%s'}) "
-							+ "MERGE (l:language {val:'%s'}) "
-							+ "MERGE (b:birth_year {val:'%s'}) "
-							+ "CREATE (u)-[:SEX]->(s) "
-							+ "CREATE (u)-[:NATIONALITY]->(n) "
-							+ "CREATE (u)-[:LANGUAGE]->(l) "
-							+ "CREATE (u)-[:BIRTH_YEAR]->(b) ",
-							id,userName,sex.toUpperCase(), nationality.toUpperCase(), language.toUpperCase(),birthYear));
+							"MATCH (u:user {id:'%s'})" + "SET u.name = '%s'"
+									+ "WITH u MATCH (u)-[s_r:SEX]->() DELETE s_r "
+									+ "WITH u MATCH (u)-[n_r:NATIONALITY]->() DELETE n_r "
+									+ "WITH u MATCH (u)-[b_r:BIRTH_YEAR]->() DELETE b_r "
+									+ "WITH u MATCH (u)-[l_r:LANGUAGE]->() DELETE l_r " + "MERGE (s:sex {val:'%s'}) "
+									+ "MERGE (n:country {val:'%s'}) " + "MERGE (l:language {val:'%s'}) "
+									+ "MERGE (b:birth_year {val:'%s'}) " + "CREATE (u)-[:SEX]->(s) "
+									+ "CREATE (u)-[:NATIONALITY]->(n) " + "CREATE (u)-[:LANGUAGE]->(l) "
+									+ "CREATE (u)-[:BIRTH_YEAR]->(b) ",
+							id, userName, sex.toUpperCase(), nationality.toUpperCase(), language.toUpperCase(),
+							birthYear));
 
 					return "OK";
 				}
@@ -103,23 +96,60 @@ public class User implements AutoCloseable {
 		}
 
 	}
-	
-	public String likeMovie(String idU, String idM, boolean like) throws Exception{
+
+	/**
+	 * Agregar una reacción a una película
+	 * 
+	 * @param idU
+	 * @param idM
+	 * @param reviewOption. 1:like, 2:dislike, 3:viewed
+	 * @return
+	 * @throws Exception
+	 */
+	public String reactToMovie(String idU, String idM, int reactionOption) throws Exception {
+		
+		clearMovieReaction(idU, idM);
+
+		final String option = (reactionOption == 1) ? "LIKE"
+				: (reactionOption == 2) ? "DISLIKE" : (reactionOption == 3) ? "VIEWED" : "";
+
 		try (Session session = connection.startSession()) {
-			final String status = like ? "LIKE" : "DISLIKE";		
-			final String prevSt = like ? "DISLIKE" : "LIKE";
 
 			String result = session.writeTransaction(new TransactionWork<String>()
 
 			{
 				@Override
 				public String execute(Transaction tx) {
-					tx.run(String.format(
-							"MATCH (u:user {id:'%s'})"
-							+ "MATCH (m:movie {id:'%s'})"
-							+ "CREATE (u)-[:%s]->(m) "
-							+ "WITH m MATCH (u)-[p_s:%s]->() DELETE p_s ",
-							idU,idM,status,prevSt));
+
+					tx.run(String.format("MATCH (u:user {id:'%s'}) MATCH (m:movie {id:'%s'}) CREATE (u)-[:%s]->(m) ",
+							idU, idM, option));
+
+					return "OK";
+				}
+			}
+
+			);
+
+			return result;
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
+
+	public String clearMovieReaction(String idU, String idM) throws Exception {
+
+		try (Session session = connection.startSession()) {
+
+			String result = session.writeTransaction(new TransactionWork<String>()
+
+			{
+				@Override
+				public String execute(Transaction tx) {
+
+					final String query = String.format(
+							"MATCH (u:user {id:'%s'}) MATCH (m:movie {id:'%s'}) MATCH (u)-[r]->(m) DELETE r", idU, idM);
+					tx.run(query);
+
 					return "OK";
 				}
 			}

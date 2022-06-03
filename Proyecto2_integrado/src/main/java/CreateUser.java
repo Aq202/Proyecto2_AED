@@ -58,8 +58,8 @@ public class CreateUser extends HttpServlet {
 				throw new BadRequestException("La propiedad 'birthYear' es requerida.");
 			if (sex == null)
 				throw new BadRequestException("La propiedad 'sex' es requerida.");
-			if( !"M".equalsIgnoreCase(sex.trim()) && !"F".equalsIgnoreCase(sex.trim()))
-				throw new BadRequestException("La propiedad 'sex' es invalida. Valor 'M' o 'F' requerido.");
+			if( !"M".equalsIgnoreCase(sex.trim()) && !"F".equalsIgnoreCase(sex.trim()) && !"X".equalsIgnoreCase(sex.trim()))
+				throw new BadRequestException("La propiedad 'sex' es invalida. Valor 'M', 'F' o 'X' requerido.");
 			if (nationality == null)
 				throw new BadRequestException("La propiedad 'nationality' es requerida.");
 			if (language == null)
