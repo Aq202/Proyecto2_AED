@@ -3,16 +3,17 @@ import "../styles/recomendationPage.css";
 import Banner from "./Banner";
 import banner from "../resources/images/recomendationsBanner.svg";
 import MovieOption from "./MovieOption";
-import SendRecommendationsButton from "./SendRecommendationsButton";
 import { useSession } from "./hooks/useSession";
 import { useNavigate } from "react-router-dom";
 import InstructionsPopUp from "./InstructionsPopUp";
 import ReactDOM from "react-dom";
+import Spinner from "./Spinner";
 
 const RateMoviesPage = () => {
 	const [movies, setMovies] = useState([]);
 	const [blockSearch, setBlockSearch] = useState();
 	const [interruption, setInterruption] = useState();
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [{ id: userId }, isAlertOpen, closeAlert] = useSession(true);
 	const navigate = useNavigate();
@@ -40,6 +41,8 @@ const RateMoviesPage = () => {
 				return r.json();
 			})
 			.then(result => {
+				if (isLoading !== false) setIsLoading(false);
+
 				if (response.ok === true) {
 					let { movies: moviesList } = result;
 
@@ -53,7 +56,10 @@ const RateMoviesPage = () => {
 					else setBlockSearch(true); //bloquear busqueda si no hay más resultados
 				}
 			})
-			.catch(err => console.error("Error al consultar lista de peliculas: ", err));
+			.catch(err => {
+				if (isLoading !== false) setIsLoading(false);
+				console.error("Error al consultar lista de peliculas: ", err);
+			});
 	};
 
 	return (
@@ -72,22 +78,27 @@ const RateMoviesPage = () => {
 				))}
 			</div>
 
+			<div className="others">
+				{movies.length === 0 && isLoading === false ? (
+					<p className="no-result-message">Sin Resultados</p>
+				) : null}
 
-			{
-				isAlertOpen   
-					? ReactDOM.createPortal(
-							<InstructionsPopUp
-								close={closeAlert}
-								instructions={[
-									"Más despacio vaquero...",
-									"Ingresa tus datos de perfil antes de continuar",
-								]}
-								callback={() => navigate("/profile")}
-							/>,
-							document.querySelector("body")
-					  )
-					: null
-			}
+				{isLoading ? <Spinner /> : null}
+			</div>
+
+			{isAlertOpen
+				? ReactDOM.createPortal(
+						<InstructionsPopUp
+							close={closeAlert}
+							instructions={[
+								"Más despacio vaquero...",
+								"Ingresa tus datos de perfil antes de continuar",
+							]}
+							callback={() => navigate("/profile")}
+						/>,
+						document.querySelector("body")
+				  )
+				: null}
 		</div>
 	);
 };

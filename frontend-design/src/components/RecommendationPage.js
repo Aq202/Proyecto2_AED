@@ -9,12 +9,12 @@ import { useNavigate } from "react-router-dom";
 import InstructionsPopUp from "./InstructionsPopUp";
 import ReactDOM from "react-dom";
 import { usePopUp } from "./hooks/usePopUp";
+import Spinner from "./Spinner";
 
 const RecommendationsPage = () => {
-	const [movie, setMovie] = useState();
+	const [movie, setMovie] = useState(null);
 	const [{ id }, isAlertOpen, closeAlert] = useSession(true);
-	const [viewedMovies, setViewedMovies] = useState([]);
-	const [defaultStatus, setDefaultStatus] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const navigate = useNavigate();
 
@@ -25,33 +25,17 @@ const RecommendationsPage = () => {
 		requestRecommendation();
 	}, [id]);
 
-	//cuando se sale de la pagina
-	useEffect(() => {
-		return () => {
-			console.log("Limpiando películas vistas...");
-			viewedMovies?.forEach(mov => {
-				const url =
-					"./reactToMovie?" +
-					new URLSearchParams({ user: id, movie: mov.id, option: 0 }).toString();
-				fetch(url);
-			});
-		};
-	}, []);
 
 	const handleOptionChange = () => requestRecommendation();
 
-	const makeAsViewed = () => {
-		setDefaultStatus(true);
 
-		//añadir a la cola
-		setViewedMovies(last => [...last, movie.id]);
-	};
 
 	const requestRecommendation = () => {
 		if (!id) {
 			console.warn("El ID es invalido del usuario");
 			return;
 		}
+
 		console.log("Searching recommendations...");
 		const url = `./getRecommendation?userId=${id}`;
 
@@ -62,12 +46,21 @@ const RecommendationsPage = () => {
 				return r.json();
 			})
 			.then(result => {
-				const { id, title, image } = result?.result;
-				setDefaultStatus(null);
-				setMovie({ id, title, image });
-				console.info("Recomendación: ", result);
+				if (isLoading !== false) setIsLoading(false);
+
+				if (result.length == 0) throw null;
+				else {
+					const { id, title, image } = result?.result;
+					setMovie({ id, title, image });
+					console.info("Recomendación: ", result);
+				}
 			})
-			.catch(err => console.error("Error al obtener recom: ", err));
+			.catch(err => {
+				if (isLoading !== false) setIsLoading(false);
+				openNoMore();
+				setMovie(null);
+				console.error("Error al obtener recom: ", err);
+			});
 	};
 
 	return (
@@ -88,13 +81,15 @@ const RecommendationsPage = () => {
 							title={movie.title}
 							changeStatus={handleOptionChange}
 							blockAtFirst={true}
-							defaultStatus={defaultStatus ? "3" : null}
 						/>
 
-						<button className="skip" onClick={makeAsViewed}>
-							Saltar
-						</button>
 					</>
+				) : null}
+
+				{isLoading ? <Spinner /> : null}
+
+				{movie === null && isLoading !== true ? (
+					<p className="no-result-message">Sin Resultados</p>
 				) : null}
 			</div>
 
@@ -119,9 +114,8 @@ const RecommendationsPage = () => {
 							instructions={[
 								"¡Nos encanta que aproveches nuestra herramienta al máximo!",
 								"Lastimosamente nos hemos quedado sin opciones para tí.",
-								"Continúa calificando películas para obtener más y mejores recomendaciones.",
+								"Recuerda que debes calificar al menos un film para obtener recomendaciones.",
 							]}
-							callback={() => navigate("/profile")}
 						/>,
 						document.querySelector("body")
 				  )
